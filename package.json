@@ -1,0 +1,26 @@
+{
+  "name": "study_algorithm_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "latin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyw017763/Study_Algorithm_JS.git"
+  },
+  "author": "woni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyw017763/Study_Algorithm_JS/issues"
+  },
+  "homepage": "https://github.com/kyw017763/Study_Algorithm_JS#readme",
+  "dependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "fs": "0.0.1-security"
+  }
+}
