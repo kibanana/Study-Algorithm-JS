@@ -4,19 +4,37 @@ const content = fs.readFileSync('latinContent.txt');
 const contentArr = content.toString().split('\r\n');
 const [ wordNum, ...wordArr ] = contentArr;
 
-wordArr.forEach((value, i) => {
-  value = value.replace(/a/g, 'as')
-  .replace(/i/g, 'ios')
-  .replace(/y/g, 'ios')
-  .replace(/l/g, 'les')
-  .replace(/n/g, 'anes')
-  .replace(/ne/g, 'anes')
-  .replace(/o/g, 'os')
-  .replace(/r/g, 'res')
-  .replace(/t/g, 'tas')
-  .replace(/u/g, 'us')
-  .replace(/v/g, 'ves')
-  .replace(/w/g, 'was');
+const grammarArr = [];
+grammarArr.push({rgex: /a$/, result: 'as'});
+grammarArr.push({rgex: /y$/, result: 'ios'});
+grammarArr.push({rgex: /l$/, result: 'les'});
+grammarArr.push({rgex: /ne$/, result: 'anes'});
+grammarArr.push({rgex: /n$/, result: 'anes'});
+grammarArr.push({rgex: /o$/, result: 'os'});
+grammarArr.push({rgex: /r$/, result: 'res'});
+grammarArr.push({rgex: /t$/, result: 'tas'});
+grammarArr.push({rgex: /u$/, result: 'us'});
+grammarArr.push({rgex: /v$/, result: 'ves'});
+grammarArr.push({rgex: /w$/, result: 'was'});
 
-  console.log(`${i + 1}: ${value}`);
+let ended = '';
+const l = grammarArr.length;
+let oriValue = '';
+
+wordArr.forEach((value, i) => {
+  oriValue = value;
+
+  for(let j = 0; j < l; j++) {
+    let g = grammarArr[j];
+    if(g.rgex.test(value)) {
+      value = value.replace(g.rgex, g.result);
+      break;
+    }
+  }
+
+  if(oriValue === value) {
+    value = value + 'us';
+  }
+  
+  console.log(value);
 });
