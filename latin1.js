@@ -17,14 +17,12 @@ grammarArr.push({rgex: /u$/, result: 'us'});
 grammarArr.push({rgex: /v$/, result: 'ves'});
 grammarArr.push({rgex: /w$/, result: 'was'});
 
-let ended = '';
-const l = grammarArr.length;
 let oriValue = '';
 
 wordArr.forEach((value, i) => {
   oriValue = value;
 
-  for(let j = 0; j < l; j++) {
+  for(let j = 0; j < grammarArr.length; j++) {
     let g = grammarArr[j];
     if(g.rgex.test(value)) {
       value = value.replace(g.rgex, g.result);
