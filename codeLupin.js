@@ -20,7 +20,7 @@ const contentArr = [];
 content.toString().split('***END***').forEach((value, i) => {
   const newArr = value.toString().split('\r\n');
   if(i === 0) {
-    openSourceCnt = newArr.shift(); // 오픈소스 수 
+    openSourceCnt = newArr.shift(); // 오픈소스 수 (사용하지 않는 변수)
   }
   
   contentArr.push(newArr.filter((f) => !!f.trim()));
@@ -29,10 +29,48 @@ content.toString().split('***END***').forEach((value, i) => {
 
 const finalContentArr = contentArr.filter((e) => e.length > 0);
 
-let duplCnt = 0;
-let duplMax = {
-  cnt: 0,
-  sourceName: '',
-};
+let duplFlag = 0;
+let duplCnt = [];
+let newDupl;
 
-console.log(finalContentArr);
+for (let i = 0; i < finalContentArr[finalContentArr.length - 1].length; i++) {
+  finalContentArr[finalContentArr.length - 1][i] = finalContentArr[finalContentArr.length - 1][i].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' ');
+}
+
+for (let i = 0; i < finalContentArr.length - 1; i++) {
+  newDupl = {
+    cnt: 0,
+    finalPosition: 0,
+    name: '',
+  };
+
+  // arr[i][0] => 파일명이므로
+  for (let j = 1; j < finalContentArr[i].length; j++) {
+    // 현재 소스 코드, 오픈 소스 비교
+    if (finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' ')) != -1) {
+      if (duplFlag === 0) {
+        duplFlag = 1;
+        newDupl.cnt ++;
+        newDupl.finalPosition = finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j]);
+        newDupl.name = finalContentArr[i][0];
+      } else {
+        if ((newDupl.finalPosition + 1) == finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' '))) {
+          newDupl.cnt ++;
+          newDupl.finalPosition ++;
+        } else {
+          duplCnt.push(newDupl);
+          newDupl = {
+            cnt: 1,
+            finalPosition: finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j]),
+            name: finalContentArr[i][0],
+          };
+        }
+      }
+    } // if
+  } // for
+  duplCnt.push(newDupl);
+  duplFlag = 0;
+} // for
+
+const result = duplCnt.sort((now, next) => next.cnt - now.cnt)[0];
+console.log(`${result.cnt} ${result.name}`);
