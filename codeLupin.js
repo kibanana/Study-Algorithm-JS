@@ -27,41 +27,40 @@ content.toString().split('***END***').forEach((value, i) => {
   // 공백 => false => 걸러짐
 });
 
+// 빈 배열 걸러짐
 const finalContentArr = contentArr.filter((e) => e.length > 0);
+const finalLen = finalContentArr.length;
 
-let duplFlag = 0;
 let duplCnt = [];
 let newDupl;
 
-for (let i = 0; i < finalContentArr[finalContentArr.length - 1].length; i++) {
-  finalContentArr[finalContentArr.length - 1][i] = finalContentArr[finalContentArr.length - 1][i].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' ');
+// 소스 코드 공백 제거
+for (let i = 0; i < finalContentArr[finalLen - 1].length; i++) {
+  finalContentArr[finalLen - 1][i] = finalContentArr[finalLen - 1][i].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' ');
 }
 
-for (let i = 0; i < finalContentArr.length - 1; i++) {
-  newDupl = {
-    cnt: 0,
-    finalPosition: 0,
-    name: '',
-  };
+// 메인 로직
+for (let i = 0; i < finalLen - 1; i++) {
+  newDupl = {};
 
   // arr[i][0] => 파일명이므로
   for (let j = 1; j < finalContentArr[i].length; j++) {
     // 현재 소스 코드, 오픈 소스 비교
-    if (finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' ')) != -1) {
-      if (duplFlag === 0) {
-        duplFlag = 1;
-        newDupl.cnt ++;
-        newDupl.finalPosition = finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j]);
+    if (finalContentArr[finalLen - 1].indexOf(finalContentArr[i][j].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' ')) != -1) {
+      if (!newDupl.cnt) {
+        newDupl.cnt = 1;
+        newDupl.finalPosition = finalContentArr[finalLen - 1].indexOf(finalContentArr[i][j]);
         newDupl.name = finalContentArr[i][0];
       } else {
-        if ((newDupl.finalPosition + 1) == finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' '))) {
+        console.log(newDupl);
+        if ((newDupl.finalPosition + 1) == finalContentArr[finalLen - 1].indexOf(finalContentArr[i][j].replace(/(^ *)|( *$)/g, '').replace(/ +/g, ' '))) {
           newDupl.cnt ++;
           newDupl.finalPosition ++;
         } else {
           duplCnt.push(newDupl);
           newDupl = {
             cnt: 1,
-            finalPosition: finalContentArr[finalContentArr.length - 1].indexOf(finalContentArr[i][j]),
+            finalPosition: finalContentArr[finalLen - 1].indexOf(finalContentArr[i][j]),
             name: finalContentArr[i][0],
           };
         }
@@ -69,7 +68,7 @@ for (let i = 0; i < finalContentArr.length - 1; i++) {
     } // if
   } // for
   duplCnt.push(newDupl);
-  duplFlag = 0;
+  newDupl = {};
 } // for
 
 const result = duplCnt.sort((now, next) => next.cnt - now.cnt)[0];
