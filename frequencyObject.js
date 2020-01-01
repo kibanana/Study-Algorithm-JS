@@ -1,57 +1,48 @@
 /* 문자열을 받아 그 중에서 가장 빈도수가 많은 단일문자를 찾는 함수 */
 
-const countFrequency = str => {
-    let result = new Array();
+const str = '김예원은 밥을 먹는다 김예원은 무언가를 한다 김김김';
 
-    let value;
-    let resultValue;
+const countFrequency = (frequencyStr) => {
+  // eslint-disable-next-line no-param-reassign
+  frequencyStr = frequencyStr.replace(/\s+/g, '');
 
-    if(str.length < 1) {
-        return '함수에 전달된 값이 문자열이 아닙니다!';
+  if (!frequencyStr.length) {
+    return '함수에 전달된 값이 문자열이 아닙니다!';
+  }
+
+  const result = [];
+
+  // 문자열 순회
+  for (const value of frequencyStr) {
+    // result 배열들에 아무 값이 없을 경우 for문이 정상적으로 작동하지 않으므로 따로 분리함
+    if (!result.length) {
+      result.push({ v: value, cnt: 1 });
     }
 
-    // 문자열 순회
-    for(let i = 0; i < str.length; i++) {
-        value = str[i];
-        
-        // result 배열들에 아무 값이 없을 경우 for문이 정상적으로 작동하지 않으므로 따로 분리함
-        if(i === 0) {
-            result.push({v: value, cnt: 1});
-        }
-    
-        for(let j = 0; j < result.length; j++) {
-            resultValue = result[j].v;
-    
-            if(value === resultValue) {
-                result[j].cnt++;
-                break;
-            }
-    
-            if(j === result.length-1) {
-                result.push({v: value, cnt: 1});
-            }
-        }
+    // 이미 result 배열에 있는 값 체크: 인덱스를 비교해야 함
+    const tempIdx = result.findIndex((e) => {
+      return e.v === value;
+    });
+    if (tempIdx === -1) {
+      result.push({ v: value, cnt: 1 });
+    } else {
+      result[result.map((e) => e.v).indexOf(value)].cnt++;
     }
-    
-    let resultObject;
-    
-    if(result.length > 0) {
-        resultObject = {
-            value: result[0].v,
-            cnt: result[0].cnt
-        };
-    }
-    
-    for(let i = 1; i < result.length; i++) {
-        if(resultObject.num < result[i].cnt) {
-            reslutObject = {
-                value: result[i].v,
-                cnt: result[i].cnt
-            }
-        }
-    }
+  }
 
-    return resultObject;
-}
+  // 1)
+  // const maxCnt = result.map((e) => e.cnt).reduce((now, next) => {
+  //   return Math.max(now, next);
+  // });
 
-console.log(countFrequency('김예원은 밥을 먹는다 김예원은 무언가를 한다 김김김'));
+  // 2)
+  const maxCnt = Math.max(...result.map((e) => e.cnt));
+
+  const maxIdx = result.findIndex((e) => {
+    return e.cnt === maxCnt;
+  });
+
+  return result[maxIdx];
+};
+
+console.log(countFrequency(str));
